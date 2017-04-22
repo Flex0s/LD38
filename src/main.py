@@ -18,43 +18,37 @@ import pygame
 pygame.init()
 pygame.font.init()
 
-display_width = 1024
-display_height = 768
+
+CONST_DISPLAY_WIDTH = 1024
+CONST_DISPLAY_HEIGHT = 768
+
+CONST_TOWER_DAMAGE = [5,10,15,20,25]
+CONST_TOWER_RANGE = [5,10,15,20,25]
+CONST_TOWER_PRICE = [5,10,15,20,25]
+
+
+
+
+
 gamepath = 'E:\_Work\LD38\\'
 imgpath = gamepath + 'sprites\\'
 
-gameDisplay = pygame.display.set_mode((display_width,display_height))
+gameDisplay = pygame.display.set_mode((CONST_DISPLAY_WIDTH,CONST_DISPLAY_HEIGHT))
 pygame.display.set_caption('LD38 - A small world - by Flex')
 clock = pygame.time.Clock()
 
+   
 techtree_font = pygame.font.SysFont("Arial", 15)
 info_font = pygame.font.SysFont("Arial", 10)
 
 
-#Tower1
-range_t1 = 5
-damage_t1 = 5
-cost_t1 = 5 
 
-#Tower2
-range_t2 = 10
-damage_t2 = 10
-cost_t2 = 10
 
-#Tower3
-range_t3 = 15
-damage_t3 = 15
-cost_t3 = 15
+techtree_x_offset = [50, 130, 210, 280, 350]
+tower_img =[ pygame.image.load(imgpath + 'Tower1.png') , pygame.image.load(imgpath + 'Tower2.png') , pygame.image.load(imgpath + 'Tower3.png') , pygame.image.load(imgpath + 'Tower4.png') , pygame.image.load(imgpath + 'Tower5.png')]
 
-#Tower4
-range_t4 = 20
-damage_t4 = 20 
-cost_t4 = 20
 
-#Tower5
-range_t5 = 25 
-damage_t5 = 25 
-cost_t5 = 25
+healthbar_img_names = ['Healthbar_schwarz.png','Healthbar_gruen.png','Healthbar_gelb.png','Healthbar_rot.png']
 
 #starting coins
 balance = 10000
@@ -67,11 +61,7 @@ black = (0,0,0)
 
 globeimg = pygame.image.load(imgpath + 'world.png').convert_alpha()
 gridimg = pygame.image.load(imgpath + 'world_grid.png').convert_alpha() 
-t1img = pygame.image.load(imgpath + 'Tower1.png')
-t2img = pygame.image.load(imgpath + 'Tower2.png')
-t3img = pygame.image.load(imgpath + 'Tower3.png')
-t4img = pygame.image.load(imgpath + 'Tower4.png')
-t5img = pygame.image.load(imgpath + 'Tower5.png')
+
 
 
 def globe(x,y):
@@ -107,74 +97,25 @@ def snapgrid(img,x,y):
         valid = False
           
     if valid == True:
-        gameDisplay.blit(img,(x+row*40+10,y+column*40+10))
+        if chosen_tower != -1:
+            gameDisplay.blit(img,(x+row*40+10,y+column*40+10))
         
 def techtree():
     # show the techtree
     label = techtree_font.render("Techtree", True, black)
-    gameDisplay.blit(label, (50, display_height - 100))
-    
-    #Tower1
-    x_offs = 50
-    label = techtree_font.render("Tower1", True, black)
-    gameDisplay.blit(label, (x_offs, display_height - 80))    
-    gameDisplay.blit(t1img,(x_offs, display_height - 60))     
-    label = info_font.render("Cost: %d " % cost_t1, True, black)
-    gameDisplay.blit(label, (x_offs, display_height - 40))           
-    label = info_font.render("Range: %d" % cost_t1, True, black)
-    gameDisplay.blit(label, (x_offs, display_height - 30))              
-    label = info_font.render("Damage: %d" % cost_t1, True, black)
-    gameDisplay.blit(label, (x_offs, display_height - 20)) 
-    
-    #Tower2    
-    x_offs=130
-    label = techtree_font.render("Tower2", True, black)
-    gameDisplay.blit(label, (x_offs, display_height - 80))    
-    gameDisplay.blit(t2img,(x_offs, display_height - 60)) 
-    label = info_font.render("Cost: %d " % cost_t2, True, black)
-    gameDisplay.blit(label, (x_offs, display_height - 40))           
-    label = info_font.render("Range: %d" % cost_t2, True, black)
-    gameDisplay.blit(label, (x_offs, display_height - 30))              
-    label = info_font.render("Damage: %d" % cost_t2, True, black)
-    gameDisplay.blit(label, (x_offs, display_height - 20)) 
-        
-    #Tower3    
-    x_offs=210  
-    label = techtree_font.render("Tower3", True, black)
-    gameDisplay.blit(label, (x_offs, display_height - 80))    
-    gameDisplay.blit(t3img,(x_offs, display_height - 60)) 
-    label = info_font.render("Cost: %d " % cost_t3, True, black)
-    gameDisplay.blit(label, (x_offs, display_height - 40))           
-    label = info_font.render("Range: %d" % cost_t3, True, black)
-    gameDisplay.blit(label, (x_offs, display_height - 30))              
-    label = info_font.render("Damage: %d" % cost_t3, True, black)
-    gameDisplay.blit(label, (x_offs, display_height - 20)) 
+    gameDisplay.blit(label, (50, CONST_DISPLAY_HEIGHT - 100))
 
-    #Tower4  
-    x_offs=280
-    label = techtree_font.render("Tower4", True, black)
-    gameDisplay.blit(label, (x_offs, display_height - 80))    
-    gameDisplay.blit(t4img,(x_offs, display_height - 60)) 
-    label = info_font.render("Cost: %d " % cost_t4, True, black)
-    gameDisplay.blit(label, (x_offs, display_height - 40))           
-    label = info_font.render("Range: %d" % cost_t4, True, black)
-    gameDisplay.blit(label, (x_offs, display_height - 30))              
-    label = info_font.render("Damage: %d" % cost_t4, True, black)
-    gameDisplay.blit(label, (x_offs, display_height - 20)) 
-
-    #Tower5   
-    x_offs =350
-    label = techtree_font.render("Tower5", True, black)
-    gameDisplay.blit(label, (x_offs, display_height - 80))    
-    gameDisplay.blit(t5img,(x_offs, display_height - 60))  
-    label = info_font.render("Cost: %d " % cost_t5, True, black)
-    gameDisplay.blit(label, (x_offs, display_height - 40))           
-    label = info_font.render("Range: %d" % cost_t5, True, black)
-    gameDisplay.blit(label, (x_offs, display_height - 30))              
-    label = info_font.render("Damage: %d" % cost_t5, True, black)
-    gameDisplay.blit(label, (x_offs, display_height - 20))    
-    
-    
+    for i in range(0, len(CONST_TOWER_DAMAGE)):
+        label = techtree_font.render("Tower%d" %(i+1) , True, black)
+        gameDisplay.blit(label, ( techtree_x_offset[i], CONST_DISPLAY_HEIGHT - 80))    
+        gameDisplay.blit(tower_img[i],(techtree_x_offset[i], CONST_DISPLAY_HEIGHT - 60))     
+        label = info_font.render("Cost: %d " % CONST_TOWER_PRICE[i], True, black)
+        gameDisplay.blit(label, ( techtree_x_offset[i], CONST_DISPLAY_HEIGHT - 40))           
+        label = info_font.render("Range: %d" % CONST_TOWER_RANGE[i], True, black)
+        gameDisplay.blit(label, ( techtree_x_offset[i], CONST_DISPLAY_HEIGHT - 30))              
+        label = info_font.render("Damage: %d" % CONST_TOWER_DAMAGE[i], True, black)
+        gameDisplay.blit(label, ( techtree_x_offset[i], CONST_DISPLAY_HEIGHT - 20)) 
+      
 
 def findpos():
     p = pygame.mouse.get_pos()
@@ -190,9 +131,52 @@ def findpos():
         column = 10
     return(row,column)
 
+def findtower(chosen_tower):
+    p = pygame.mouse.get_pos()
+
+   
+    if  p[1] > CONST_DISPLAY_HEIGHT - 80 :
+        if p[0] <= techtree_x_offset[0]+70:    
+            return 0
+        elif p[0] > techtree_x_offset[0]+70 and p[0] <= techtree_x_offset[1]+60:
+            return 1
+        elif p[0] > techtree_x_offset[1]+60 and p[0] <= techtree_x_offset[2]+60:
+            return 2  
+        elif p[0] > techtree_x_offset[2]+60 and p[0] <= techtree_x_offset[3]+60:
+            return 3
+        elif p[0] > techtree_x_offset[3]+60 and p[0] <= techtree_x_offset[4]+60:
+            return 4               
+        else:
+            return -1
+    else:
+        return chosen_tower
+    
+def check_if_valid():
+    valid = True
+    if (row == 0 or row == 10) and (column == 0 or column == 1 or column ==  2 or column ==  3 or column == 7 or column == 8 or column ==  9 or column ==  10):
+        valid = False
+    
+    if (row == 1 or row == 9 ) and (column == 0 or column == 1 or column ==  9 or column ==  10):
+        valid = False
+        
+    if (row == 2 or row == 8 ) and (column == 0 or column ==  10):
+        valid = False
+        
+    if (row == 3 or row == 7 ) and (column == 0 or column ==  4 or column ==  5 or column ==  6 or column ==  10):
+        valid = False
+        
+    if (row == 4 or row == 5 or row == 6 ) and (column == 3 or column ==  4 or column ==  5 or column ==  6 or column ==  7):
+        valid = False
+    
+    
+    
+    return valid
+
+    
+
 def cog(r,c):
-    offs_x= display_width*0.5-(globeimg.get_width()/2)
-    offs_y= display_height*0.5-(globeimg.get_height()/2)
+    offs_x= CONST_DISPLAY_WIDTH*0.5-(globeimg.get_width()/2)
+    offs_y= CONST_DISPLAY_HEIGHT*0.5-(globeimg.get_height()/2)
     cog_x = offs_x+r*40+20
     cog_y = offs_y+c*40+20
     return (cog_x, cog_y)
@@ -202,14 +186,14 @@ fields = []
 
 for row in range(0,11):
     for column in range(0,11):
-        fields.append(building(row,column,'none',0))
+        fields.append(building(row,column,-1,0))
 
 
 
 
 crashed = False
 buymode = False
-chosen_tower = 'none'
+chosen_tower = -1
 
 while not crashed:
     
@@ -219,56 +203,93 @@ while not crashed:
         if event.type == pygame.QUIT:
             crashed = True          
       
-        x= display_width*0.5-(globeimg.get_width()/2)
-        y= display_height*0.5-(globeimg.get_height()/2)
+        #show coin balance and globe
+        x= CONST_DISPLAY_WIDTH*0.5-(globeimg.get_width()/2)
+        y= CONST_DISPLAY_HEIGHT*0.5-(globeimg.get_height()/2)
         globe(x,y)
         coins(50,10)
         
-        if buymode == True:      
+        
+        if buymode == True:    
+            #buymode active  
             grid(x,y)
-            if(chosen_tower != 'none'):
-                snapgrid(t1img,x,y)
             techtree()
+
             
             if event.type == pygame.MOUSEBUTTONUP:              
+                chosen_tower = findtower(chosen_tower)               
+                p = pygame.mouse.get_pos()
                 
-                
-                
-                
-                  
-                (row,column) = findpos()                      
-                index = row*11 + column
-                fields[index].set_towertype(chosen_tower)          
-                buymode = False
-                chosen_tower = 'none'
-                
-                
-                
-        else:        
-            for row in range(0,11):
-                for column in range(0,11):
-                    tower = fields[row*11+column].get_towertype()
-                    if ( tower == 't1'):
-                        gameDisplay.blit(t1img,(x+row*40+10,y+column*40+10))
-                    elif ( tower == 't2'):
-                        gameDisplay.blit(t2img,(x+row*40+10,y+column*40+10))
-                    elif ( tower == 't3'):
-                        gameDisplay.blit(t3img,(x+row*40+10,y+column*40+10))                       
-                    elif ( tower == 't4'):
-                        gameDisplay.blit(t4img,(x+row*40+10,y+column*40+10))
-                    elif ( tower == 't5'):
-                        gameDisplay.blit(t5img,(x+row*40+10,y+column*40+10))             
-        
+                if chosen_tower != -1 and p[1] <= CONST_DISPLAY_HEIGHT - 80:
+                    
+                    (row,column) = findpos()
+                 
+                    index = row*11 + column    
+                    if check_if_valid() == True:   
+                        if balance - CONST_TOWER_PRICE[chosen_tower] >= 0 : 
+                            if fields[index].get_towertype() == -1:                
+                                fields[index].set_towertype(chosen_tower)   
+                                fields[index].health = 100
+                                balance = balance - CONST_TOWER_PRICE[chosen_tower]     
+                                buymode = False
+                                chosen_tower = -1
+                        else:
+                            print('incufficient funds!')
+                    
+                        
+                                  
       
+            snapgrid(tower_img[chosen_tower],x,y)
+        else:
+            
+            # buymode not active
+            if event.type == pygame.MOUSEBUTTONUP:       
+                print("please press B!") 
+
+
         if event.type == pygame.KEYDOWN:
+            #check for key-input
             if event.key == pygame.K_b:
                 buymode = True
             elif event.key == pygame.K_x:
                 buymode = False
+                chosen_tower = -1
 
+        # show towers
+        for row in range(0,11):
+            for column in range(0,11):
+                towertype = fields[row*11+column].get_towertype()
+                if towertype != -1:
+                    gameDisplay.blit(tower_img[towertype],(x+row*40+10,y+column*40+10))
+                    health = fields[row*11+column].get_health()
+                    
+                    if health == 100:
+                        gameDisplay.blit(pygame.image.load(imgpath + healthbar_img_names[1]), (x+row*40+5,y+column*40+40)) 
+                    
+                    
+                    elif health > 50:
+                        gameDisplay.blit(pygame.image.load(imgpath + healthbar_img_names[0]), (x+row*40+5,y+column*40+40)) 
+                        resolution_x = 30*health/100
+                        file = (imgpath+healthbar_img_names[1])
+                        image = pygame.image.load(file)                         
+                        gameDisplay.blit(pygame.transform.scale( image , (int(resolution_x) ,5) ), (x+row*40+5,y + column*40+40)  )
+                    elif health > 25:
+                        gameDisplay.blit(pygame.image.load(imgpath + healthbar_img_names[0]), (x+row*40+5,y+column*40+40)) 
+                        resolution_x = 30*health/100
+                        file = (imgpath+healthbar_img_names[2])
+                        image = pygame.image.load(file)                         
+                        gameDisplay.blit(pygame.transform.scale( image , (int(resolution_x) ,5) ), (x+row*40+5,y + column*40+40)  )
+                    elif health > 0:
+                        gameDisplay.blit(pygame.image.load(imgpath + healthbar_img_names[0]), (x+row*40+5,y+column*40+40)) 
+                        resolution_x = 30*health/100
+                        file = (imgpath+healthbar_img_names[3])
+                        image = pygame.image.load(file)                         
+                        gameDisplay.blit(pygame.transform.scale( image , (int(resolution_x) ,5) ), (x+row*40+5,y + column*40+40)  )
+                    else:
+                    # kaboom
+                        fields[row*11+column].set_towertype(-1)
 
-
-
+                        
     pygame.display.update()     
     clock.tick(60)
 

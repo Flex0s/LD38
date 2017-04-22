@@ -3,12 +3,14 @@ Created on 22.04.2017
 
 @author: Flex
 '''
+#be careful, this is not global!
+CONST_TOWER_DAMAGE = [5,10,15,20,25]
+CONST_TOWER_RANGE = [5,10,15,20,25]
 
 class building(object):
     '''
     classdocs
     '''
-
 
     def __init__(self, row, column, towertype, health):
         '''
@@ -28,21 +30,13 @@ class building(object):
     
     def set_towertype(self, towertype):
         self.towertype = towertype
-        if towertype == 't1':
-            self.damage = damage_t1
-            self.range = range_t1 
-        elif towertype == 't2':
-            self.damage = damage_t2
-            self.range = range_t2
-        elif towertype == 't3':
-            self.damage = damage_t3
-            self.range = range_t3        
-        elif towertype == 't4':
-            self.damage = damage_t4
-            self.range = range_t4
-        elif towertype == 't5':
-            self.damage = damage_t5
-            self.range = range_t5
+        if towertype == -1:
+            self.damage = 0
+            self.range = 0
+        else:
+            self.damage = CONST_TOWER_DAMAGE[towertype]
+            self.range = CONST_TOWER_RANGE[towertype]
+        
     
     def set_health(self, new_health_value):
         self.health = new_health_value
