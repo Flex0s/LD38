@@ -3,9 +3,14 @@ Created on 22.04.2017
 
 @author: Flex
 '''
-#be careful, this is not global!
-CONST_TOWER_DAMAGE = [5,10,15,20,25]
-CONST_TOWER_RANGE = [5,10,15,20,25]
+
+# be careful, use same field in main.py! not global!
+CONST_TOWER_DAMAGE = [1,2,4,6,12]
+CONST_TOWER_RANGE = [80,120,200,300,300]
+CONST_TOWER_PRICE = [20,35,80,300,650]
+CONST_TOWER_COOLDOWN = [300,200,50,400,100]
+white = (255,255,255)
+black = (0,0,0)
 
 class building(object):
     '''
@@ -20,6 +25,7 @@ class building(object):
         self.column = column
         self.health = health
         self.set_towertype(towertype)  
+        self.cooldown = 0
      
         
     def get_towertype(self):
@@ -41,4 +47,19 @@ class building(object):
     def set_health(self, new_health_value):
         self.health = new_health_value
     
+    def get_range(self):
+        return self.range
+    
+    def get_damage(self):
+        return self.damage
+    
+    def reset_cooldown(self,actual_time):
+        self.cooldown = actual_time + CONST_TOWER_COOLDOWN[self.towertype]
+    
+    def get_cooldown(self):
+        return self.cooldown
+
+    def get_has_shot(self):
+        return self.has_shot
+
        
