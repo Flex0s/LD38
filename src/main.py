@@ -7,6 +7,8 @@ beware: i mixed up the names for row and columns,
 '''
 from optparse import check_builtin
 from building import building
+from enemy import enemy
+from math import sqrt
 
 
 if __name__ == '__main__':
@@ -90,10 +92,10 @@ def snapgrid(img,x,y):
     if (row == 2 or row == 8 ) and (column == 0 or column ==  10):
         valid = False
         
-    if (row == 3 or row == 7 ) and (column == 0 or column ==  4 or column ==  5 or column ==  6 or column ==  10):
+    if (row == 3 or row == 7 ) and (column == 0 or column ==  10):
         valid = False
         
-    if (row == 4 or row == 5 or row == 6 ) and (column == 3 or column ==  4 or column ==  5 or column ==  6 or column ==  7):
+    if (row == 4 or row == 5 or row == 6 ) and (column ==  4 or column ==  5 or column ==  6):
         valid = False
           
     if valid == True:
@@ -162,16 +164,18 @@ def check_if_valid():
     if (row == 2 or row == 8 ) and (column == 0 or column ==  10):
         valid = False
         
-    if (row == 3 or row == 7 ) and (column == 0 or column ==  4 or column ==  5 or column ==  6 or column ==  10):
+    if (row == 3 or row == 7 ) and (column == 0 or column ==  10):
         valid = False
         
-    if (row == 4 or row == 5 or row == 6 ) and (column == 3 or column ==  4 or column ==  5 or column ==  6 or column ==  7):
+    if (row == 4 or row == 5 or row == 6 ) and (column ==  4 or column ==  5 or column ==  6):
         valid = False
     
     
     
     return valid
 
+
+    
     
 
 def cog(r,c):
@@ -180,6 +184,17 @@ def cog(r,c):
     cog_x = offs_x+r*40+20
     cog_y = offs_y+c*40+20
     return (cog_x, cog_y)
+
+#create paths
+walking_path = []
+path_offset_x = CONST_DISPLAY_WIDTH*0.5-(globeimg.get_width()/2)
+path_offset_y = CONST_DISPLAY_HEIGHT*0.5-(globeimg.get_height()/2)
+walking_path.append([(path_offset_x + 55, path_offset_y+ 45),(path_offset_x + 200, path_offset_y + 80),(path_offset_x + 275, path_offset_y + 130),(path_offset_x + 300, path_offset_y + 190),(path_offset_x + 290, path_offset_y + 240),(path_offset_x + 250, path_offset_y + 265),(path_offset_x + 230, path_offset_y + 215)])
+walking_path.append([(path_offset_x + 395, path_offset_y + 385),(path_offset_x+240,path_offset_y+360),(path_offset_x+ 210, path_offset_y + 330),(path_offset_x+220, path_offset_y>+290),(path_offset_x+230, path_offset_y + 280),(path_offset_x+250, path_offset_y + 265),(path_offset_x+230,path_offset_y+215)])
+
+
+
+
 
 #initialize Buildings with 'none'
 fields = []
@@ -196,6 +211,12 @@ buymode = False
 chosen_tower = -1
 
 while not crashed:
+    arsch1 = enemy("Arsch1", 20, 100, 3, 1, 0)
+    
+    
+    
+    
+    
     
     for event in pygame.event.get():
         gameDisplay.fill(white)     
@@ -255,6 +276,43 @@ while not crashed:
                 buymode = False
                 chosen_tower = -1
 
+        
+
+                        
+        # enemy movement
+        activepath = walking_path[arsch1.get_path()]
+        actual_location = arsch1.get_location()
+        sector = arsch1.get_sector()
+        if sector == 0:
+             #new enemy
+            arsch1.set_location(activepath[0])
+            arsch1.set_sector(1)
+            
+        else:
+            target_location= activepath[sector]
+            
+            
+            
+
+            distance_to_next_waypoint = sqrt( pow( (target_location[0] - actual_location[0]), 2) + pow( (target_location[1] - actual_location[1]), 2))
+      
+            
+
+        
+        # damage dealing                
+        # towers
+        
+        
+        # enemy     
+        
+        
+        #show enemies
+        
+        
+        
+        
+        
+        
         # show towers
         for row in range(0,11):
             for column in range(0,11):
@@ -288,7 +346,9 @@ while not crashed:
                     else:
                     # kaboom
                         fields[row*11+column].set_towertype(-1)
-
+                        
+        
+                   
                         
     pygame.display.update()     
     clock.tick(60)
