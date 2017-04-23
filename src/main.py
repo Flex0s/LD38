@@ -28,17 +28,17 @@ CONST_DISPLAY_WIDTH = 1024
 CONST_DISPLAY_HEIGHT = 768
 
 # be careful, change also in building.py! not global!
-CONST_TOWER_DAMAGE = [1,2,4,6,12]
-CONST_TOWER_RANGE = [80,120,200,300,300]
-CONST_TOWER_PRICE = [20,35,80,300,650]
-CONST_TOWER_COOLDOWN = [300,200,50,400,100]
+CONST_TOWER_DAMAGE = [7,12,15,20,12]
+CONST_TOWER_RANGE = [150,200,200,300,300]
+CONST_TOWER_PRICE = [20,28,80,300,650]
+CONST_TOWER_COOLDOWN = [350,700,50,400,100]
 
 # be careful, change also in enemy.py! not global!
 CONST_ENEMY_DAMAGE = [0.5, 1, 2.5, 4, 5]
 CONST_ENEMY_RANGE = [10, 20, 30, 40, 50]
-CONST_ENEMY_SPEED = [1, 1.5, 1.5, 2, 0.5]
+CONST_ENEMY_SPEED = [0.5, 1, 1.5, 2, 0.5]
 CONST_ENEMY_LOOT = [1, 2, 3, 4, 5]
-CONST_ENEMY_HEALTH = [100, 110, 120, 130, 140]
+CONST_ENEMY_HEALTH = [30, 70, 120, 130, 140]
 
 
 techtree_font = pygame.font.SysFont("Arial", 15)  
@@ -69,7 +69,8 @@ enemy_img = [ pygame.image.load(imgpath + 'enemy_1.png') , pygame.image.load(img
 healthbar_img_names = ['Healthbar_schwarz.png','Healthbar_gruen.png','Healthbar_gelb.png','Healthbar_rot.png']
 
 #starting coins
-balance = 1000
+balance = 100
+home_health = 1000
 
 
 white = (255,255,255)
@@ -79,6 +80,8 @@ black = (0,0,0)
 
 globeimg = pygame.image.load(imgpath + 'world.png').convert_alpha()
 gridimg = pygame.image.load(imgpath + 'world_grid.png').convert_alpha() 
+rangeimg = pygame.image.load(imgpath + 'range.png').convert_alpha() 
+
 
 offs_x= CONST_DISPLAY_WIDTH*0.5-(globeimg.get_width()/2)
 offs_y= CONST_DISPLAY_HEIGHT*0.5-(globeimg.get_height()/2)
@@ -94,7 +97,7 @@ def coins(x,y):
     gameDisplay.blit(label, (x, y))   
     
     
-def snapgrid(img,x,y):
+def snapgrid(chosen_tower,x,y):
     
     (row, column) = findpos()
     
@@ -106,18 +109,28 @@ def snapgrid(img,x,y):
     if (row == 1 or row == 9 ) and (column == 0 or column == 1 or column ==  9 or column ==  10):
         valid = False
         
-    if (row == 2 or row == 8 ) and (column == 0 or column ==  10):
+    if (row == 2 or row == 3 ) and (column == 0 or  column == 1 or column ==  10):
         valid = False
         
-    if (row == 3 or row == 7 ) and (column == 0 or column ==  10):
-        valid = False
+    if (row == 4 ) and (column == 1 or column ==  4 or column ==  5 or column ==  6):
+        valid = False    
         
-    if (row == 4 or row == 5 or row == 6 ) and (column ==  4 or column ==  5 or column ==  6):
+    if (row == 5 ) and (column == 1 or column ==  4 or column ==  5 or column ==  6 or column == 7 or column == 8 or column == 9):
+        valid = False 
+
+    if (row == 6 ) and (column == 2 or column ==  4 or column ==  5 or column ==  6 or column ==  9):
         valid = False
-          
+                         
+    if (row == 7 ) and (column == 0 or column == 3 or column ==  4 or column ==  5 or  column == 9 or column ==  10):
+        valid = False
+    
+    if (row == 8 ) and (column == 0 or column == 9 or column ==  10):
+        valid = False        
+
     if valid == True:
         if chosen_tower != -1:
-            gameDisplay.blit(img,(x+row*40+10,y+column*40+10))
+            gameDisplay.blit(tower_img[chosen_tower],(x+row*40+10,y+column*40+10))
+            show_range((row,column),chosen_tower)
         
 def techtree(techtree_font):
     # show the techtree
@@ -141,17 +154,21 @@ def techtree(techtree_font):
 
 def findpos():
     p = pygame.mouse.get_pos()
-    row = int((p[0]-x)/40)
+    row = int((p[0]-offs_x)/40)
     if row <0:
         row =0
     if row > 10:
         row = 10
-    column = int((p[1]-y)/40)
+    column = int((p[1]-offs_y)/40)
     if column < 0:
         column = 0
     if column > 10:
         column = 10
     return(row,column)
+
+
+    
+    
 
 def findtower(chosen_tower):
     p = pygame.mouse.get_pos()
@@ -190,8 +207,6 @@ def check_if_valid():
     if (row == 4 or row == 5 or row == 6 ) and (column ==  4 or column ==  5 or column ==  6):
         valid = False
     
-    
-    
     return valid
 
  
@@ -201,12 +216,27 @@ def cog(r,c):
     cog_y = offs_y+c*40+20
     return (cog_x, cog_y)
 
+
+def show_range(coordinates,chosen_tower):
+    
+    if chosen_tower != -1:
+        tower_range = CONST_TOWER_RANGE[chosen_tower]
+        if tower_range != 0:
+            scaled_img = pygame.transform.scale( rangeimg , (tower_range*2,tower_range*2))
+            coord_x = offs_x+coordinates[0]*40-tower_range+20
+            coord_y = offs_y+coordinates[1]*40-tower_range+20
+            gameDisplay.blit(scaled_img,  (coord_x,coord_y)  )  
+ 
+
+
 #create paths
 walking_path = []
 path_offset_x = CONST_DISPLAY_WIDTH*0.5-(globeimg.get_width()/2)
 path_offset_y = CONST_DISPLAY_HEIGHT*0.5-(globeimg.get_height()/2)
 walking_path.append([(path_offset_x + 55, path_offset_y+ 45),(path_offset_x + 200, path_offset_y + 80),(path_offset_x + 275, path_offset_y + 130),(path_offset_x + 300, path_offset_y + 190),(path_offset_x + 290, path_offset_y + 240),(path_offset_x + 250, path_offset_y + 265),(path_offset_x + 230, path_offset_y + 215)])
 walking_path.append([(path_offset_x + 395, path_offset_y + 385),(path_offset_x+240,path_offset_y+360),(path_offset_x+ 210, path_offset_y + 330),(path_offset_x+220, path_offset_y+290),(path_offset_x+230, path_offset_y + 280),(path_offset_x+250, path_offset_y + 265),(path_offset_x+230,path_offset_y+215)])
+walking_path.append()
+
 
 
 
@@ -259,8 +289,7 @@ while not crashed:
                                 balance = balance - CONST_TOWER_PRICE[chosen_tower]     
                                 buymode = False
                                 chosen_tower = -1
-                        else:
-                            print('incufficient funds!')
+
                     
         else:
             
@@ -295,32 +324,82 @@ while not crashed:
         time_to_next_wave = (5000 - actual_time) /1000
         label = wavecounter_font.render("Next wave in: %d seconds" % int(time_to_next_wave) , True, black)
         gameDisplay.blit(label, (230, 100))       
+    
+    INTRO_DURATION = 0    
+    LEVEL_1_START = INTRO_DURATION + 5000   
+    LEVEL_2_START = LEVEL_1_START + 15000 
+    LEVEL_3_START = LEVEL_2_START + 15000
         
-    if actual_time > 5000:
+    if actual_time > LEVEL_1_START and game_level == 0:
         game_level = 1
         
     if game_level == 1:       
         if event_counter <1:
             enemies.append(enemy("Arsch1", 0, 0))
-            enemies.append(enemy("Arsch1.1", 0, 1))
-            enemies.append(enemy("Arsch1.2", 0, 0))
-            enemies.append(enemy("Arsch2", 1, 1))
-            
-            event_counter = 1
-    
-        if actual_time > 16000 and event_counter <2:
-            enemies.append(enemy("Arsch3", 1, 0))   
-            enemies.append(enemy("Arsch3.1", 0, 0))
+            enemies.append(enemy("Arsch2", 0, 1))
+            event_counter = 1         
+
+        if actual_time > LEVEL_1_START+500 and event_counter <2:
+            enemies.append(enemy("Arsch1", 0, 0))   
+            enemies.append(enemy("Arsch2", 0, 1))
             event_counter = 2
+            
+        if actual_time > LEVEL_1_START+1000 and event_counter <3:
+            enemies.append(enemy("Arsch1", 0, 0))   
+            enemies.append(enemy("Arsch2", 0, 1))
+            event_counter = 3
     
-        if actual_time > 17000 and event_counter <3:
-            enemies.append(enemy("Arsch4", 1, 1))   
+        if actual_time > LEVEL_1_START+1500 and event_counter <4:
+            enemies.append(enemy("Arsch4", 0, 0))   
             enemies.append(enemy("Arsch5", 0, 1))  
-            event_counter = 3            
+            event_counter = 4            
                         
-   
+        if actual_time > LEVEL_1_START+2000 and event_counter <5:
+            enemies.append(enemy("Arsch4", 0, 0))   
+            enemies.append(enemy("Arsch5", 0, 1))  
+            event_counter = 5      
+    
+        if actual_time > LEVEL_1_START+2500 and event_counter <6:
+            enemies.append(enemy("Arsch4", 0, 0))   
+            enemies.append(enemy("Arsch5", 0, 1))  
+            event_counter = 6       
     
     
+    if actual_time > LEVEL_2_START and game_level == 1:
+        game_level = 2
+        event_counter = 0
+
+    if game_level == 2:
+        if event_counter <1:
+            enemies.append(enemy("Arsch1", 1, 0))
+            enemies.append(enemy("Arsch2", 1, 1))
+            event_counter = 1         
+
+        if actual_time > LEVEL_2_START+500 and event_counter <2:
+            enemies.append(enemy("Arsch1", 1, 0))   
+            enemies.append(enemy("Arsch2", 1, 1))
+            event_counter = 2
+            
+        if actual_time > LEVEL_2_START+1000 and event_counter <3:
+            enemies.append(enemy("Arsch1", 1, 0))   
+            enemies.append(enemy("Arsch2", 1, 1))
+            event_counter = 3
+    
+        if actual_time > LEVEL_2_START+1500 and event_counter <4:
+            enemies.append(enemy("Arsch4", 1, 0))   
+            enemies.append(enemy("Arsch5", 1, 1))  
+            event_counter = 4            
+                        
+        if actual_time > LEVEL_2_START+2000 and event_counter <5:
+            enemies.append(enemy("Arsch4", 1, 0))   
+            enemies.append(enemy("Arsch5", 1, 1))  
+            event_counter = 5      
+    
+        if actual_time > LEVEL_2_START+2500 and event_counter <6:
+            enemies.append(enemy("Arsch4", 1, 0))   
+            enemies.append(enemy("Arsch5", 1, 1))  
+            event_counter = 6         
+        
     
     
     
@@ -328,7 +407,7 @@ while not crashed:
     for i in range(0,len(enemies)):
         
         if enemies[i].get_health() > 0:
-            activepath = walking_path[enemies[i].get_type()]
+            activepath = walking_path[enemies[i].get_path()]
             actual_location = enemies[i].get_location()
             sector = enemies[i].get_sector()
             if sector == 0:
@@ -364,14 +443,11 @@ while not crashed:
             
                     #show enemies
                     gameDisplay.blit(enemy_img[enemies[i].get_type()],enemies[i].get_location()) 
-                    health = 100* enemies[i].get_health() / CONST_ENEMY_HEALTH[enemies[i].get_type()]
-                    if health == 100:
-                        resolution_x = 21
-                        file = (imgpath+healthbar_img_names[1])
-                        image = pygame.image.load(file)                          
-                        gameDisplay.blit(pygame.transform.scale( image , (int(resolution_x) ,3) ), (new_position[0]-3, new_position[1]+20)  )                        
-                    
-                    elif health > 50:
+                    health = enemies[i].get_health()
+                    health_rel = 100* health / CONST_ENEMY_HEALTH[enemies[i].get_type()]
+
+
+                    if health_rel > 50:
                         resolution_x = 21
                         file = (imgpath+healthbar_img_names[0])
                         image = pygame.image.load(file)                          
@@ -380,7 +456,7 @@ while not crashed:
                         file = (imgpath+healthbar_img_names[1])
                         image = pygame.image.load(file)                         
                         gameDisplay.blit(pygame.transform.scale( image , (int(resolution_x) ,3) ), (new_position[0]-3, new_position[1]+20)  )
-                    elif health > 25:
+                    elif health_rel > 25:
                         resolution_x = 21
                         file = (imgpath+healthbar_img_names[0])
                         image = pygame.image.load(file)                          
@@ -389,7 +465,7 @@ while not crashed:
                         file = (imgpath+healthbar_img_names[2])
                         image = pygame.image.load(file)                         
                         gameDisplay.blit(pygame.transform.scale( image , (int(resolution_x) ,3) ), (new_position[0]-3, new_position[1]+20)  )
-                    elif health > 0:
+                    elif health_rel > 0:
                         resolution_x = 21
                         file = (imgpath+healthbar_img_names[0])
                         image = pygame.image.load(file)                          
@@ -404,8 +480,11 @@ while not crashed:
     #show snapgrid
     if buymode == True:
         grid(x,y)
-        snapgrid(tower_img[chosen_tower],x,y)
-        techtree(techtree_font)    
+        snapgrid(chosen_tower,x,y)
+        techtree(techtree_font)   
+    else:
+        coords =findpos()
+        show_range(findpos(),fields[coords[0]*11+coords[1]].get_towertype())
 
         
     # show towers + deal damage to enemies
@@ -426,11 +505,11 @@ while not crashed:
                         if distance_to_enemy < fields[row*11+column].get_range():
                             enemy_health = enemies[i].get_health()
                             if fields[row*11+column].get_cooldown() < actual_time:
-                                new_health = enemy_health - fields[row*11+column].get_damage()          
+                                new_health = enemy_health - fields[row*11+column].get_damage() 
+                                fields[row*11+column].reset_cooldown(actual_time)                                         
                                 if new_health < 0:
                                     enemies[i].set_health(0)
                                     balance = balance + enemies[i].get_loot()
-                                    fields[row*11+column].reset_cooldown(actual_time)
                                     delete_enemies.append(i)
                                 else:
                                     enemies[i].set_health(new_health)

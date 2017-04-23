@@ -3,11 +3,11 @@ Created on 23.04.2017
 
 @author: Flex
 '''
-CONST_ENEMY_DAMAGE = [1, 2, 3, 4, 5]
+CONST_ENEMY_DAMAGE = [0.5, 1, 2.5, 4, 5]
 CONST_ENEMY_RANGE = [10, 20, 30, 40, 50]
-CONST_ENEMY_SPEED = [1, 3, 4, 2, 3]
+CONST_ENEMY_SPEED = [0.5, 1, 1.5, 2, 0.5]
 CONST_ENEMY_LOOT = [1, 2, 3, 4, 5]
-CONST_ENEMY_HEALTH = [100, 110, 120, 130, 140]
+CONST_ENEMY_HEALTH = [30, 110, 120, 130, 140]
 
 from random import randint
 
@@ -67,7 +67,8 @@ class enemy(object):
     def get_loot(self):
         return self.loot
 
-        
+    def get_path(self):
+        return self.path
     
     
     
