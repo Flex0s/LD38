@@ -3,11 +3,13 @@ Created on 23.04.2017
 
 @author: Flex
 '''
-CONST_ENEMY_DAMAGE = [0.5, 1, 2.5, 4, 5]
-CONST_ENEMY_RANGE = [10, 20, 30, 40, 50]
-CONST_ENEMY_SPEED = [0.5, 1, 1.5, 2, 0.5]
-CONST_ENEMY_LOOT = [1, 2, 3, 4, 5]
-CONST_ENEMY_HEALTH = [30, 110, 120, 130, 140]
+ENEMY_INFO = ['low', 'medium', 'hard', 'flying', 'boss']
+CONST_ENEMY_DAMAGE = [0.5, 0.6, 1, 0.6, 5]
+CONST_ENEMY_RANGE = [40, 40, 40, 40, 40]
+CONST_ENEMY_SPEED = [0.4, 0.8, 0.5, 0.6, 0.2]
+CONST_ENEMY_LOOT = [2, 3, 5, 7, 35]
+CONST_ENEMY_HEALTH = [30, 16, 50, 40, 300]
+CONST_ENEMY_COOLDOWN = [350,700,50,400,350]
 
 from random import randint
 
@@ -30,7 +32,8 @@ class enemy(object):
         self.sector = 0
         self.target = (0,0)
         self.loot = CONST_ENEMY_LOOT[type]
-        
+        self.cooldown = 0
+        self.inrange = False
     
     def set_health(self, health):
         self.health = health
@@ -70,6 +73,16 @@ class enemy(object):
     def get_path(self):
         return self.path
     
+    def reset_cooldown(self,actual_time):
+        self.cooldown = actual_time + CONST_ENEMY_COOLDOWN[self.type]
     
+    def get_cooldown(self):
+        return self.cooldown
+    
+    def set_inrange(self, in_range):
+        self.inrange = in_range
+    
+    def get_inrange(self):
+        return self.inrange
     
         

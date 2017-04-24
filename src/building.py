@@ -5,10 +5,11 @@ Created on 22.04.2017
 '''
 
 # be careful, use same field in main.py! not global!
-CONST_TOWER_DAMAGE = [7,12,15,20,12]
-CONST_TOWER_RANGE = [150,200,200,300,300]
-CONST_TOWER_PRICE = [20,28,80,300,650]
-CONST_TOWER_COOLDOWN = [350,700,50,400,100]
+CONST_TOWER_NAME = ['Pulse','Negotiator','Peacemaker','Equalizer','Undertaker','Lawbringer']
+CONST_TOWER_DAMAGE = [8,12,15,20,12,20]
+CONST_TOWER_RANGE = [90,120,200,300,300,250]
+CONST_TOWER_PRICE = [26,40,110,300,650,1000]
+CONST_TOWER_COOLDOWN = [400,700,300,400,100,50]
 white = (255,255,255)
 black = (0,0,0)
 
@@ -59,7 +60,6 @@ class building(object):
     def get_cooldown(self):
         return self.cooldown
 
-    def get_has_shot(self):
-        return self.has_shot
+
 
        
