@@ -27,8 +27,8 @@ CONST_DISPLAY_HEIGHT = 768
 
 # be careful, change also in building.py! not global!
 CONST_TOWER_NAME = ['Pulse','Negotiator','Peacemaker','Equalizer','Undertaker','Lawbringer']
-CONST_TOWER_DAMAGE = [8,12,15,20,12,20]
-CONST_TOWER_RANGE = [90,120,200,300,300,250]
+CONST_TOWER_DAMAGE = [8,12,15,20,12,25]
+CONST_TOWER_RANGE = [90,120,200,300,350,100]
 CONST_TOWER_PRICE = [26,40,110,300,650,1000]
 CONST_TOWER_COOLDOWN = [300,700,300,400,100,50]
 
@@ -36,9 +36,9 @@ CONST_TOWER_COOLDOWN = [300,700,300,400,100,50]
 ENEMY_INFO = ['low', 'medium', 'hard', 'flying', 'boss']
 CONST_ENEMY_DAMAGE = [0.5, 0.6, 1, 0.6, 5]
 CONST_ENEMY_RANGE = [40, 40, 40, 40, 40]
-CONST_ENEMY_SPEED = [0.4, 0.8, 0.5, 0.6, 0.2]
-CONST_ENEMY_LOOT = [2, 3, 5, 7, 35]
-CONST_ENEMY_HEALTH = [30, 16, 50, 40, 300]
+CONST_ENEMY_SPEED = [0.4, 0.8, 0.5, 0.6, 0.25]
+CONST_ENEMY_LOOT = [2, 5, 4, 7, 35]
+CONST_ENEMY_HEALTH = [30, 120, 50, 85, 550]
 CONST_ENEMY_COOLDOWN = [350,700,50,400,350]
 
 CONST_HOME = (520,367)
@@ -50,6 +50,7 @@ wavecounter_font = pygame.font.SysFont("Arial", 20)
 roundcounter_font = pygame.font.SysFont("Arial", 25) 
 homebasehealth_font = pygame.font.SysFont("Arial", 30)  
 gameover_font = pygame.font.SysFont("Impact", 150)
+gamewon_font = pygame.font.SysFont("Impact", 130)
 
 imgpath = '..\sprites\\'
 
@@ -113,7 +114,31 @@ def game_over(game_level):
     pygame.quit()
     quit()
   
+def game_won():
+    gameDisplay.fill(black) 
+    label = gamewon_font.render("CONGRATULATIONS!"  , True, white)
+    gameDisplay.blit(label, (10, 130))  
     
+    label = roundcounter_font.render("You saved the World!"  , True, white)
+    gameDisplay.blit(label, (410, 300))    
+
+
+       
+    label = roundcounter_font.render("Please press Return to Exit"  , True, white)
+    gameDisplay.blit(label, (380, 700))     
+    crashed = False
+    while not crashed:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                crashed = True  
+            if event.type == pygame.KEYDOWN:
+                #check for key-input
+                if event.key == pygame.K_RETURN:
+                    pygame.quit()
+                    quit()
+        pygame.display.update() 
+    pygame.quit()
+    quit()    
 
 def rot_center(image, angle):
     orig_rect = image.get_rect()
@@ -396,6 +421,9 @@ while not crashed:
     LEVEL_1_START = INTRO_DURATION + 5000   
     LEVEL_2_START = LEVEL_1_START + 35000 
     LEVEL_3_START = LEVEL_2_START + 30000
+    LEVEL_4_START = LEVEL_3_START + 30000
+    LEVEL_5_START = LEVEL_4_START + 50000
+    LEVEL_6_START = LEVEL_5_START + 30000
     actual_time = pygame.time.get_ticks()
     if game_level == 0:    
         time_to_next_wave = (LEVEL_1_START - actual_time) /1000
@@ -541,9 +569,276 @@ while not crashed:
             enemies.append(enemy("Arsch5", 2, 4))
             enemies.append(enemy("Arsch5", 2, 3))
             enemies.append(enemy("Arsch5", 2, 5))          
-            event_counter = 8   
-    
+            event_counter = 8
+               
+        if actual_time > LEVEL_2_START+3500 and event_counter <9:
+            enemies.append(enemy("Arsch5", 2, 4))   
+            enemies.append(enemy("Arsch5", 2, 4))
+            enemies.append(enemy("Arsch5", 2, 3))
+            enemies.append(enemy("Arsch5", 2, 5))   
+            enemies.append(enemy("Arsch5", 2, 4))   
+            enemies.append(enemy("Arsch5", 2, 4))
+            enemies.append(enemy("Arsch5", 2, 3))
+            enemies.append(enemy("Arsch5", 2, 5))       
+            event_counter = 9
+            
+    if actual_time > LEVEL_3_START and game_level ==2:
+        game_level = 3
+        event_counter = 0    
+
+    if game_level == 3:
+        label = roundcounter_font.render("ROUND 3: Flying Fuckheads"  , True, black)
+        gameDisplay.blit(label, (390, 130))  
+        time_to_next_wave = (LEVEL_4_START - actual_time) /1000
+        label = wavecounter_font.render("Next wave in: %d seconds" % int(time_to_next_wave) , True, black)
+        gameDisplay.blit(label, (780, 130)) 
         
+        if actual_time > LEVEL_3_START and event_counter <1:
+            enemies.append(enemy("Arsch1", 3, 6))
+            enemies.append(enemy("Arsch2", 3, 7))
+            enemies.append(enemy("Arsch2", 3, 7))
+            event_counter = 1         
+
+        if actual_time > LEVEL_3_START+500 and event_counter <2:
+            enemies.append(enemy("Arsch1", 3, 6)) 
+  
+            enemies.append(enemy("Arsch2", 3, 6))
+            event_counter = 2
+            
+        if actual_time > LEVEL_3_START+1000 and event_counter <3:
+            enemies.append(enemy("Arsch1", 3, 7))   
+
+            enemies.append(enemy("Arsch2", 3, 7))
+            event_counter = 3
+    
+        if actual_time > LEVEL_3_START+1500 and event_counter <4:
+            enemies.append(enemy("Arsch4", 3, 6))   
+            enemies.append(enemy("Arsch4", 3, 7))
+ 
+
+            event_counter = 4            
+                        
+        if actual_time > LEVEL_3_START+2000 and event_counter <5:
+            enemies.append(enemy("Arsch4", 3, 9))   
+            enemies.append(enemy("Arsch5", 3, 9)) 
+
+            event_counter = 5      
+    
+        if actual_time > LEVEL_3_START+2500 and event_counter <6:
+            enemies.append(enemy("Arsch4", 3, 7))   
+            enemies.append(enemy("Arsch5", 3, 8))
+            enemies.append(enemy("Arsch5", 3, 8))
+     
+            event_counter = 6   
+        
+        if actual_time > LEVEL_3_START+3000 and event_counter <7:
+            enemies.append(enemy("Arsch4", 3, 7))   
+            enemies.append(enemy("Arsch5", 3, 7))  
+            enemies.append(enemy("Arsch5", 3, 6)) 
+       
+            event_counter = 7
+         
+    
+    if actual_time > LEVEL_4_START and game_level ==3:
+        game_level = 4
+        event_counter = 0    
+
+    if game_level == 4:
+        label = roundcounter_font.render("ROUND 4: BOSS ROBOTS"  , True, black)
+        gameDisplay.blit(label, (390, 130))  
+        time_to_next_wave = (LEVEL_5_START - actual_time) /1000
+        label = wavecounter_font.render("Next wave in: %d seconds" % int(time_to_next_wave) , True, black)
+        gameDisplay.blit(label, (780, 130)) 
+        
+        if actual_time > LEVEL_4_START and event_counter <1:
+            enemies.append(enemy("Arsch1", 4, 0))
+            enemies.append(enemy("Arsch2", 4, 1))
+            enemies.append(enemy("Arsch2", 4, 2))
+            event_counter = 1         
+
+        if actual_time > LEVEL_4_START+2000 and event_counter <2:
+            enemies.append(enemy("Arsch1", 4, 3)) 
+            enemies.append(enemy("Arsch1", 4, 4))  
+            enemies.append(enemy("Arsch2", 4, 5))
+            event_counter = 2
+            
+        if actual_time > LEVEL_4_START+10000 and event_counter <3:
+            enemies.append(enemy("Arsch1", 4, 0))   
+            enemies.append(enemy("Arsch2", 4, 1))
+            enemies.append(enemy("Arsch2", 4, 2))
+            event_counter = 3
+    
+        if actual_time > LEVEL_4_START+10500 and event_counter <4:
+            enemies.append(enemy("Arsch4", 4, 3))   
+            enemies.append(enemy("Arsch4", 4, 4))
+            enemies.append(enemy("Arsch5", 4, 5))  
+            event_counter = 4            
+
+    if actual_time > LEVEL_5_START and game_level ==4:
+        game_level = 5
+        event_counter = 0    
+
+    if game_level == 5:
+        label = roundcounter_font.render("ROUND 5: Greasy Plumbers" , True, black)
+        gameDisplay.blit(label, (390, 130))  
+        time_to_next_wave = (LEVEL_6_START - actual_time) /1000
+        label = wavecounter_font.render("Next wave in: %d seconds" % int(time_to_next_wave) , True, black)
+        gameDisplay.blit(label, (780, 130)) 
+        
+        if actual_time > LEVEL_5_START and event_counter <1:
+            enemies.append(enemy("Arsch1", 1, 0))
+            enemies.append(enemy("Arsch2", 1, 1))
+            enemies.append(enemy("Arsch2", 1, 2))
+            event_counter = 1         
+
+        if actual_time > LEVEL_5_START+500 and event_counter <2:
+            enemies.append(enemy("Arsch1", 1, 3)) 
+            enemies.append(enemy("Arsch1", 1, 4))  
+            enemies.append(enemy("Arsch2", 1, 5))
+            event_counter = 2
+            
+        if actual_time > LEVEL_5_START+1000 and event_counter <3:
+            enemies.append(enemy("Arsch1", 1, 0))   
+            enemies.append(enemy("Arsch2", 1, 1))
+            enemies.append(enemy("Arsch2", 1, 2))
+            event_counter = 3
+    
+        if actual_time > LEVEL_5_START+1500 and event_counter <4:
+            enemies.append(enemy("Arsch4", 1, 3))   
+            enemies.append(enemy("Arsch4", 1, 4))
+            enemies.append(enemy("Arsch5", 1, 5))  
+            event_counter = 4                
+        if actual_time > LEVEL_5_START+2000 and event_counter <5:
+            enemies.append(enemy("Arsch1", 1, 0))
+            enemies.append(enemy("Arsch2", 1, 1))
+            enemies.append(enemy("Arsch2", 1, 2))
+            event_counter = 5         
+
+        if actual_time > LEVEL_5_START+2500 and event_counter <6:
+            enemies.append(enemy("Arsch1", 1, 3)) 
+            enemies.append(enemy("Arsch1", 1, 4))  
+            enemies.append(enemy("Arsch2", 1, 5))
+            event_counter = 6
+            
+        if actual_time > LEVEL_5_START+3000 and event_counter <7:
+            enemies.append(enemy("Arsch1", 1, 0))   
+            enemies.append(enemy("Arsch2", 1, 1))
+            enemies.append(enemy("Arsch2", 1, 2))
+            event_counter = 7
+    
+        if actual_time > LEVEL_5_START+3500 and event_counter <8:
+            enemies.append(enemy("Arsch4", 1, 3))   
+            enemies.append(enemy("Arsch4", 1, 4))
+            enemies.append(enemy("Arsch5", 1, 5))  
+            event_counter = 8  
+            
+    if actual_time > LEVEL_6_START and game_level ==5:
+        game_level = 6
+        event_counter = 0  
+          
+    if game_level == 6:
+        label = roundcounter_font.render("FINAL ROUND: ALL TOGETHER!"  , True, black)
+        gameDisplay.blit(label, (370, 130))  
+
+        if actual_time > LEVEL_6_START and event_counter <1:
+            enemies.append(enemy("Arsch1", 0, 0))
+            enemies.append(enemy("Arsch1", 1, 2))
+            enemies.append(enemy("Arsch2", 0, 1))
+            enemies.append(enemy("Arsch2", 3, 9))
+            enemies.append(enemy("Arsch2", 3, 9))
+            enemies.append(enemy("Arsch2", 3, 9))
+            enemies.append(enemy("Arsch2", 4, 4))
+            event_counter = 1         
+
+        if actual_time > LEVEL_6_START+500 and event_counter <2:
+            enemies.append(enemy("Arsch1", 1, 3)) 
+            enemies.append(enemy("Arsch1", 0, 4))  
+            enemies.append(enemy("Arsch2", 4, 1))
+            enemies.append(enemy("Arsch1", 2, 3)) 
+            enemies.append(enemy("Arsch1", 4, 3))  
+            enemies.append(enemy("Arsch2", 0, 5))
+            enemies.append(enemy("Arsch2", 1, 5))
+            enemies.append(enemy("Arsch2", 0, 4))
+            enemies.append(enemy("Arsch2", 0, 3))
+            enemies.append(enemy("Arsch2", 0, 0))
+            
+            event_counter = 2
+            
+        if actual_time > LEVEL_6_START+1000 and event_counter <3:
+            enemies.append(enemy("Arsch1", 3, 6))   
+            enemies.append(enemy("Arsch2", 3, 6))
+            enemies.append(enemy("Arsch2", 3, 7))
+            enemies.append(enemy("Arsch2", 3, 7))
+            enemies.append(enemy("Arsch2", 0, 4))
+            enemies.append(enemy("Arsch2", 0, 3))
+            enemies.append(enemy("Arsch2", 0, 0))
+            enemies.append(enemy("Arsch1", 3, 8))   
+            enemies.append(enemy("Arsch2", 3, 8))
+            enemies.append(enemy("Arsch2", 3, 9))
+            enemies.append(enemy("Arsch2", 3, 9))
+            event_counter = 3
+    
+        if actual_time > LEVEL_6_START+1500 and event_counter <4:
+            enemies.append(enemy("Arsch4", 0, 3))   
+            enemies.append(enemy("Arsch4", 4, 4))
+            enemies.append(enemy("Arsch5", 0, 5))  
+            enemies.append(enemy("Arsch2", 0, 4))
+            enemies.append(enemy("Arsch2", 0, 3))
+            enemies.append(enemy("Arsch2", 0, 0))
+            
+            
+            event_counter = 4                
+        if actual_time > LEVEL_6_START+2000 and event_counter <5:
+            enemies.append(enemy("Arsch1", 3, 6))   
+            enemies.append(enemy("Arsch2", 3, 6))
+            enemies.append(enemy("Arsch2", 3, 7))
+            enemies.append(enemy("Arsch2", 3, 7))
+            enemies.append(enemy("Arsch1", 2, 0))
+            enemies.append(enemy("Arsch2", 2, 1))
+            enemies.append(enemy("Arsch2", 2, 2))
+            event_counter = 5         
+
+        if actual_time > LEVEL_6_START+2500 and event_counter <6:
+            enemies.append(enemy("Arsch1", 3, 6))   
+            enemies.append(enemy("Arsch2", 3, 6))
+            enemies.append(enemy("Arsch2", 3, 7))
+            enemies.append(enemy("Arsch2", 3, 7))
+            enemies.append(enemy("Arsch1", 2, 3)) 
+            enemies.append(enemy("Arsch1", 1, 4))  
+            enemies.append(enemy("Arsch2", 0, 5))
+            event_counter = 6
+            
+        if actual_time > LEVEL_6_START+3000 and event_counter <7:
+            enemies.append(enemy("Arsch1", 3, 6))   
+            enemies.append(enemy("Arsch2", 3, 6))
+            enemies.append(enemy("Arsch2", 3, 7))
+            enemies.append(enemy("Arsch2", 3, 7))
+            enemies.append(enemy("Arsch1", 0, 0))   
+            enemies.append(enemy("Arsch2", 2, 1))
+            enemies.append(enemy("Arsch2", 1, 2))
+            enemies.append(enemy("Arsch1", 3, 8))   
+            enemies.append(enemy("Arsch2", 3, 8))
+            enemies.append(enemy("Arsch2", 3, 9))
+            enemies.append(enemy("Arsch2", 3, 9))
+            event_counter = 7
+    
+        if actual_time > LEVEL_6_START+3500 and event_counter <8:
+            enemies.append(enemy("Arsch4", 1, 3))   
+            enemies.append(enemy("Arsch4", 2, 4))
+            enemies.append(enemy("Arsch5", 2, 5))  
+            enemies.append(enemy("Arsch1", 3, 8))   
+            enemies.append(enemy("Arsch2", 3, 8))
+            enemies.append(enemy("Arsch2", 3, 9))
+            enemies.append(enemy("Arsch2", 3, 9))
+            event_counter = 8      
+    
+    
+    
+    
+    if actual_time > LEVEL_6_START+30000 and len(enemies) == 0:
+        game_won()
+    print(len(enemies))
+    
     
     
     # enemy movement + damage from enemy + enemy visualization

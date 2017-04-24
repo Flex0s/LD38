@@ -1,4 +1,4 @@
-from distutils.core import setup  
-import py2exe  
-
-setup(console=['main.py'])
+   1 from distutils.core import setup
+   2 import py2exe
+   3 
+   4 setup(console=['main.py'])

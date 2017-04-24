@@ -4,12 +4,14 @@ Created on 22.04.2017
 @author: Flex
 '''
 
-# be careful, use same field in main.py! not global!
+
+
+
 CONST_TOWER_NAME = ['Pulse','Negotiator','Peacemaker','Equalizer','Undertaker','Lawbringer']
-CONST_TOWER_DAMAGE = [8,12,15,20,12,20]
-CONST_TOWER_RANGE = [90,120,200,300,300,250]
+CONST_TOWER_DAMAGE = [8,12,15,20,12,25]
+CONST_TOWER_RANGE = [90,120,200,300,350,100]
 CONST_TOWER_PRICE = [26,40,110,300,650,1000]
-CONST_TOWER_COOLDOWN = [400,700,300,400,100,50]
+CONST_TOWER_COOLDOWN = [300,700,300,400,100,50]
 white = (255,255,255)
 black = (0,0,0)
 

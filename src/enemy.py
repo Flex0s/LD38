@@ -3,12 +3,13 @@ Created on 23.04.2017
 
 @author: Flex
 '''
+# be careful, change also in enemy.py! not global!
 ENEMY_INFO = ['low', 'medium', 'hard', 'flying', 'boss']
 CONST_ENEMY_DAMAGE = [0.5, 0.6, 1, 0.6, 5]
 CONST_ENEMY_RANGE = [40, 40, 40, 40, 40]
 CONST_ENEMY_SPEED = [0.4, 0.8, 0.5, 0.6, 0.2]
-CONST_ENEMY_LOOT = [2, 3, 5, 7, 35]
-CONST_ENEMY_HEALTH = [30, 16, 50, 40, 300]
+CONST_ENEMY_LOOT = [2, 5, 4, 7, 35]
+CONST_ENEMY_HEALTH = [30, 100, 50, 85, 500]
 CONST_ENEMY_COOLDOWN = [350,700,50,400,350]
 
 from random import randint
