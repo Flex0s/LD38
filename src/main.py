@@ -252,7 +252,7 @@ def findtower(chosen_tower):
         elif p[0] > techtree_x_offset[3]+60 and p[0] <= techtree_x_offset[4]+60:
             answer = 4               
         elif p[0] > techtree_x_offset[3]+60 and p[0] <= techtree_x_offset[5]+60:
-            answer = 4         
+            answer = 5         
         else:
             answer -1
     else:
@@ -837,7 +837,7 @@ while not crashed:
     
     if actual_time > LEVEL_6_START+30000 and len(enemies) == 0:
         game_won()
-    print(len(enemies))
+
     
     
     
