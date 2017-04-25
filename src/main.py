@@ -13,6 +13,7 @@ import numpy as np
 from pip import locations
 from time import *
 from house import house
+from _operator import sub
 
 if __name__ == '__main__':
     pass
@@ -418,7 +419,7 @@ while not crashed:
     
     #generate enemies
     INTRO_DURATION = 0    
-    LEVEL_1_START = INTRO_DURATION + 5000   
+    LEVEL_1_START = INTRO_DURATION +0   
     LEVEL_2_START = LEVEL_1_START + 35000 
     LEVEL_3_START = LEVEL_2_START + 30000
     LEVEL_4_START = LEVEL_3_START + 30000
@@ -880,15 +881,14 @@ while not crashed:
                     enemies[i].set_location(new_position)
             
                     #show enemies
-                    vector[0] = target_location[0] - new_position[0] 
-                    vector[1] = target_location[1] - new_position[1]
-
-                    angle = np.degrees(np.arctan(target_location- new_position))+180
+                    
+                    
+                    angle = np.degrees(np.arctan2(vector[0],vector[1]))-90
                     
                     
 
                     image = enemy_img[enemies[i].get_type()]
-                    enemy_rotated = rot_center(image,angle[1])
+                    enemy_rotated = rot_center(image,angle)
 
                     gameDisplay.blit(enemy_rotated,enemies[i].get_location()) 
                     health = enemies[i].get_health()
